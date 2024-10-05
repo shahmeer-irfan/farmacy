@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPaperPlane, FaRobot, FaTag } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
+import { Button } from "@/components/ui/button";
 
 const AgriChatbot = ({ latitude, longitude, nasaData }) => {
     const [messages, setMessages] = useState([]);
@@ -121,88 +122,103 @@ const AgriChatbot = ({ latitude, longitude, nasaData }) => {
     ];
 
     return (
-        <div className="bg-gray-800 rounded-lg p-2 sm:p-4 w-full h-full flex flex-col">
-            <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-4 text-gray-100">Agricultural Assistant</h2>
-            <div className="flex-grow overflow-y-auto mb-2 sm:mb-4">
-                {messages.map((message, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className={`mb-2 ${message.role === 'user' ? 'text-right' : 'text-left'}`}
-                    >
-                        <span className={`inline-block p-1 sm:p-2 text-sm sm:text-base rounded-lg ${message.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-100'}`}>
-                            <ReactMarkdown>{message.content}</ReactMarkdown>
-                        </span>
-                    </motion.div>
-                ))}
-                {isLoading && (
-                    <div className="text-center">
-                        <FaRobot className="animate-spin inline-block text-gray-400" />
-                    </div>
-                )}
-                <div ref={chatEndRef} />
+      <div className="bg-gray-800 rounded-lg p-2 sm:p-4 w-full h-full flex flex-col">
+
+        <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-4 text-gray-100">
+          Agricultural Assistant
+        </h2>
+        <div className="flex-grow overflow-y-auto mb-2 sm:mb-4">
+          {messages.map((message, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className={`mb-2 ${
+                message.role === "user" ? "text-right" : "text-left"
+              }`}
+            >
+              <span
+                className={`inline-block p-1 sm:p-2 text-sm sm:text-base rounded-lg ${
+                  message.role === "user"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-700 text-gray-100"
+                }`}
+              >
+                <ReactMarkdown>{message.content}</ReactMarkdown>
+              </span>
+            </motion.div>
+          ))}
+          {isLoading && (
+            <div className="text-center">
+              <FaRobot className="animate-spin inline-block text-gray-400" />
             </div>
-            <div className="mb-2 flex justify-center h-10">
-                <div className="hidden sm:flex space-x-2">
-                    <AnimatePresence>
-                        {promptTags.slice(currentTagIndex, currentTagIndex + 3).map((tag, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                <button
-                                    onClick={() => setInput(tag)}
-                                    className="bg-gray-700 text-gray-300 text-xs sm:text-sm rounded-full px-3 py-1 hover:bg-blue-600 hover:text-white transition duration-300 flex items-center shadow-md"
-                                >
-                                    <FaTag className="mr-1 text-xs" />
-                                    <span className="truncate max-w-[150px]">{tag}</span>
-                                </button>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </div>
-                <motion.div
-                    key={currentTagIndex}
+          )}
+          <div ref={chatEndRef} />
+        </div>
+        <div className="mb-2 flex justify-center h-10">
+          <div className="hidden sm:flex space-x-2">
+            <AnimatePresence>
+              {promptTags
+                .slice(currentTagIndex, currentTagIndex + 3)
+                .map((tag, index) => (
+                  <motion.div
+                    key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5 }}
-                    className="sm:hidden"
-                >
+                  >
                     <button
-                        onClick={() => setInput(promptTags[currentTagIndex])}
-                        className="bg-gray-700 text-gray-300 text-xs sm:text-sm rounded-full px-3 py-1 hover:bg-blue-600 hover:text-white transition duration-300 flex items-center shadow-md"
+                      onClick={() => setInput(tag)}
+                      className="bg-gray-700 text-gray-300 text-xs sm:text-sm rounded-full px-3 py-1 hover:bg-blue-600 hover:text-white transition duration-300 flex items-center shadow-md"
                     >
-                        <FaTag className="mr-1 text-xs" />
-                        <span className="truncate max-w-[300px]">{promptTags[currentTagIndex]}</span>
+                      <FaTag className="mr-1 text-xs" />
+                      <span className="truncate max-w-[150px]">{tag}</span>
                     </button>
-                </motion.div>
-            </div>
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row">
-                <div className="flex-grow mb-2 sm:mb-0 sm:mr-2">
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        className="w-full bg-gray-700 text-gray-100 text-sm sm:text-base rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ask about agriculture..."
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white rounded-lg p-2 sm:p-3 hover:bg-blue-700 transition duration-300 flex items-center justify-center"
-                    disabled={isLoading}
-                >
-                    <FaPaperPlane className="text-sm sm:text-base" />
-                    <span className="ml-2 hidden sm:inline">Send</span>
-                </button>
-            </form>
+                  </motion.div>
+                ))}
+            </AnimatePresence>
+          </div>
+          <motion.div
+            key={currentTagIndex}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="sm:hidden"
+          >
+            <button
+              onClick={() => setInput(promptTags[currentTagIndex])}
+              className="bg-gray-700 text-gray-300 text-xs sm:text-sm rounded-full px-3 py-1 hover:bg-blue-600 hover:text-white transition duration-300 flex items-center shadow-md"
+            >
+              <FaTag className="mr-1 text-xs" />
+              <span className="truncate max-w-[300px]">
+                {promptTags[currentTagIndex]}
+              </span>
+            </button>
+          </motion.div>
         </div>
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row">
+          <div className="flex-grow mb-2 sm:mb-0 sm:mr-2">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="w-full bg-gray-700 text-gray-100 text-sm sm:text-base rounded-lg p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Ask about agriculture..."
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-600 text-white rounded-lg p-2 sm:p-3 hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+            disabled={isLoading}
+          >
+            <FaPaperPlane className="text-sm sm:text-base" />
+            <span className="ml-2 hidden sm:inline">Send</span>
+          </button>
+        </form>
+      </div>
     );
 };
 

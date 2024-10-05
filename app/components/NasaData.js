@@ -6,6 +6,8 @@ import { Inter } from 'next/font/google';
 import { FaSatellite } from 'react-icons/fa';
 import NASABackground from './NASABackground';
 import AgriChatbot from './AgriChatbot';
+import { Button } from "@/components/ui/button";
+
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -304,257 +306,360 @@ export default function NasaData() {
     };
 
     return (
-        <div className={`${inter.className} min-h-screen bg-transparent text-gray-100 p-4 sm:p-8 overflow-x-hidden`}>
-            {/* <NASABackground /> */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="max-w-4xl mx-auto bg-gray-800/70 rounded-xl shadow-lg overflow-hidden"
-            >
-                <div className="p-4 sm:p-8">
-                    <div className="flex items-center justify-between mb-6">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-100">NASA Weather Data Explorer</h1>
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => window.location.reload()}
-                            className="text-gray-100 hover:text-blue-400 transition-colors duration-300"
-                            aria-label="Refresh page"
-                        >
-                            <FaSatellite className="text-3xl" />
-                        </motion.button>
-                    </div>
-                    <form onSubmit={fetchData} className="space-y-4 sm:space-y-6">
-                        <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-                            <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-300 mb-1">Latitude</label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        value={latitude}
-                                        onChange={(e) => setLatitude(e.target.value)}
-                                        className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
-                                        placeholder="Enter latitude"
-                                        required
-                                    />
-                                    <FaLocationArrow className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-300 mb-1">Longitude</label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        value={longitude}
-                                        onChange={(e) => setLongitude(e.target.value)}
-                                        className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
-                                        placeholder="Enter longitude"
-                                        required
-                                    />
-                                    <FaLocationArrow className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-                            {presetLocations.map((location, index) => (
-                                <motion.button
-                                    key={index}
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    type="button"
-                                    onClick={() => setPresetLocation(location.lat, location.lon)}
-                                    className="bg-gray-700 text-white py-1.5 px-2 rounded-md hover:bg-gray-600 transition duration-300 flex flex-col items-start justify-center shadow-sm"
-                                >
-                                    <span className="text-xs font-medium w-full" style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>{location.name}</span>
-                                    <span className="text-[9px] text-gray-300 w-full" style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>{location.subtitle}</span>
-                                </motion.button>
-                            ))}
-                        </div>
-
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            type="button"
-                            onClick={getCurrentLocation}
-                            className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-300 flex items-center justify-center"
-                        >
-                            <FaLocationArrow className="mr-2" />
-                            Use Current Location
-                        </motion.button>
-
-                        {locationLoading && <p className="text-blue-400">Getting location...</p>}
-                        {locationError && <p className="text-red-400">{locationError}</p>}
-
-                        <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-                            <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-300 mb-1">Start Date</label>
-                                <div className="relative">
-                                    <input
-                                        type="date"
-                                        value={startDate}
-                                        onChange={(e) => setStartDate(e.target.value)}
-                                        className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
-                                        required
-                                    />
-                                    <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-300 mb-1">End Date</label>
-                                <div className="relative">
-                                    <input
-                                        type="date"
-                                        value={endDate}
-                                        onChange={(e) => setEndDate(e.target.value)}
-                                        className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
-                                        required
-                                    />
-                                    <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-between space-x-2">
-                            <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                type="button"
-                                onClick={() => setDateRange('year')}
-                                className="flex-1 bg-gray-700 text-gray-200 py-2 px-4 rounded-md hover:bg-gray-600 transition duration-300 text-sm sm:text-base"
-                            >
-                                Past Year
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                type="button"
-                                onClick={() => setDateRange('month')}
-                                className="flex-1 bg-gray-700 text-gray-200 py-2 px-4 rounded-md hover:bg-gray-600 transition duration-300 text-sm sm:text-base"
-                            >
-                                Past Month
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                type="button"
-                                onClick={() => setDateRange('week')}
-                                className="flex-1 bg-gray-700 text-gray-200 py-2 px-4 rounded-md hover:bg-gray-600 transition duration-300 text-sm sm:text-base"
-                            >
-                                Past Week
-                            </motion.button>
-                        </div>
-
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            type="submit"
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
-                        >
-                            <FaSearch className="mr-2" />
-                            Fetch NASA Data
-                        </motion.button>
-                    </form>
-
-                    {loading && (
-                        <div className="mt-8 flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-                        </div>
-                    )}
-
-                    {error && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="mt-8 bg-red-900 border-l-4 border-red-500 text-red-100 p-4 rounded"
-                        >
-                            <p className="font-bold">Error</p>
-                            <p>{error}</p>
-                        </motion.div>
-                    )}
-
-                    {data && data.properties && data.properties.parameter && data.properties.parameter.T2M && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="mt-8"
-                        >
-                            <h2 className="text-xl sm:text-2xl font-bold text-gray-100 mb-4">NASA Weather Data</h2>
-                            <div className="mb-8 bg-gray-700 border-l-4 border-green-500 p-4 rounded-lg">
-                                <h3 className="text-lg sm:text-xl font-semibold text-green-400 mb-2">Agricultural Insights</h3>
-                                {(() => {
-                                    const { insights, unavailableData } = getAgriculturalInsights(data);
-                                    if (insights.length > 0) {
-                                        return (
-                                            <ul className="space-y-4">
-                                                {insights.map((item, index) => {
-                                                    const IconComponent = getIconComponent(item.iconName);
-                                                    return (
-                                                        <li key={index} className="bg-gray-800 p-4 rounded-lg shadow">
-                                                            <div className="flex flex-col sm:flex-row sm:items-center">
-                                                                <div className="flex items-center mb-2 sm:mb-0">
-                                                                    {IconComponent && <IconComponent className="text-green-400 mr-2 text-xl sm:text-2xl" />}
-                                                                    <p className="text-green-400 font-semibold text-sm sm:text-base">{item.insight}</p>
-                                                                </div>
-                                                            </div>
-                                                            <p className="text-gray-300 mt-2 text-xs sm:text-sm"><span className="font-medium">Technical:</span> {item.technical}</p>
-                                                            <p className="text-gray-300 mt-1 text-xs sm:text-sm"><span className="font-medium">Reason:</span> {item.reason}</p>
-                                                        </li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        );
-                                    } else if (unavailableData.length > 0) {
-                                        return (
-                                            <div className="text-yellow-300 text-sm sm:text-base">
-                                                <p>Some data is unavailable or invalid:</p>
-                                                <ul className="list-disc pl-5 mt-2">
-                                                    {unavailableData.map((item, index) => (
-                                                        <li key={index} className="text-xs sm:text-sm">{item.param}: {item.reason}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        );
-                                    } else {
-                                        return <p className="text-gray-300 text-sm sm:text-base">No specific insights available for the current data.</p>;
-                                    }
-                                })()}
-                            </div>
-                            <div className="overflow-x-auto bg-gray-800 rounded-lg shadow">
-                                <table className="w-full table-auto">
-                                    <thead>
-                                        <tr className="bg-gray-700 border-b border-gray-600">
-                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Time</th>
-                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Temp (°C)</th>
-                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Precip (mm/h)</th>
-                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Wind (m/s)</th>
-                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Humidity (%)</th>
-                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Solar (W/m^2)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="bg-gray-800 divide-y divide-gray-700">
-                                        {Object.keys(data.properties.parameter.T2M).map((time, index) => (
-                                            <tr key={time} className={index % 2 === 0 ? "bg-gray-750" : "bg-gray-800"}>
-                                                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-300">{time}</td>
-                                                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">{data.properties.parameter.T2M[time]?.toFixed(1)}</td>
-                                                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">{(data.properties.parameter.PRECTOTCORR[time] || 0).toFixed(2)}</td>
-                                                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">{data.properties.parameter.WS2M[time]?.toFixed(1)}</td>
-                                                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">{data.properties.parameter.RH2M[time]?.toFixed(1)}</td>
-                                                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">{data.properties.parameter.ALLSKY_SFC_SW_DWN[time]?.toFixed(1)}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="mt-8">
-                                <AgriChatbot latitude={latitude} longitude={longitude} nasaData={data} />
-                            </div>
-                        </motion.div>
-                    )}
+      <div
+        className={`${inter.className} min-h-screen bg-transparent text-gray-100 p-4 sm:p-8 overflow-x-hidden`}
+      >
+        {/* <NASABackground /> */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto bg-gray-800/70 rounded-xl shadow-lg overflow-hidden"
+        >
+          <div className="p-4 sm:p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-100">
+                NASA Weather Data Explorer
+              </h1>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => window.location.reload()}
+                className="text-gray-100 hover:text-blue-400 transition-colors duration-300"
+                aria-label="Refresh page"
+              >
+                <FaSatellite className="text-3xl" />
+              </motion.button>
+            </div>
+            <form onSubmit={fetchData} className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Latitude
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={latitude}
+                      onChange={(e) => setLatitude(e.target.value)}
+                      className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
+                      placeholder="Enter latitude"
+                      required
+                    />
+                    <FaLocationArrow className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  </div>
                 </div>
-            </motion.div>
-        </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Longitude
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={longitude}
+                      onChange={(e) => setLongitude(e.target.value)}
+                      className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
+                      placeholder="Enter longitude"
+                      required
+                    />
+                    <FaLocationArrow className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                {presetLocations.map((location, index) => (
+                  <motion.button
+                    key={index}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="button"
+                    onClick={() =>
+                      setPresetLocation(location.lat, location.lon)
+                    }
+                    className="bg-gray-700 text-white py-1.5 px-2 rounded-md hover:bg-gray-600 transition duration-300 flex flex-col items-start justify-center shadow-sm"
+                  >
+                    <span
+                      className="text-xs font-medium w-full"
+                      style={{ wordWrap: "break-word", whiteSpace: "normal" }}
+                    >
+                      {location.name}
+                    </span>
+                    <span
+                      className="text-[9px] text-gray-300 w-full"
+                      style={{ wordWrap: "break-word", whiteSpace: "normal" }}
+                    >
+                      {location.subtitle}
+                    </span>
+                  </motion.button>
+                ))}
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                onClick={getCurrentLocation}
+                className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-300 flex items-center justify-center"
+              >
+                <FaLocationArrow className="mr-2" />
+                Use Current Location
+              </motion.button>
+
+              {locationLoading && (
+                <p className="text-blue-400">Getting location...</p>
+              )}
+              {locationError && <p className="text-red-400">{locationError}</p>}
+
+              <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Start Date
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
+                      required
+                    />
+                    <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    End Date
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
+                      required
+                    />
+                    <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between space-x-2">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={() => setDateRange("year")}
+                  className="flex-1 bg-gray-700 text-gray-200 py-2 px-4 rounded-md hover:bg-gray-600 transition duration-300 text-sm sm:text-base"
+                >
+                  Past Year
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={() => setDateRange("month")}
+                  className="flex-1 bg-gray-700 text-gray-200 py-2 px-4 rounded-md hover:bg-gray-600 transition duration-300 text-sm sm:text-base"
+                >
+                  Past Month
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={() => setDateRange("week")}
+                  className="flex-1 bg-gray-700 text-gray-200 py-2 px-4 rounded-md hover:bg-gray-600 transition duration-300 text-sm sm:text-base"
+                >
+                  Past Week
+                </motion.button>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+              >
+                <FaSearch className="mr-2" />
+                Fetch NASA Data
+              </motion.button>
+            </form>
+
+            {loading && (
+              <div className="mt-8 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+              </div>
+            )}
+
+            {error && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-8 bg-red-900 border-l-4 border-red-500 text-red-100 p-4 rounded"
+              >
+                <p className="font-bold">Error</p>
+                <p>{error}</p>
+              </motion.div>
+            )}
+
+            {data &&
+              data.properties &&
+              data.properties.parameter &&
+              data.properties.parameter.T2M && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="mt-8"
+                >
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-100 mb-4">
+                    NASA Weather Data
+                  </h2>
+                  <div className="mb-8 bg-gray-700 border-l-4 border-green-500 p-4 rounded-lg">
+                    <h3 className="text-lg sm:text-xl font-semibold text-green-400 mb-2">
+                      Agricultural Insights
+                    </h3>
+                    {(() => {
+                      const { insights, unavailableData } =
+                        getAgriculturalInsights(data);
+                      if (insights.length > 0) {
+                        return (
+                          <ul className="space-y-4">
+                            {insights.map((item, index) => {
+                              const IconComponent = getIconComponent(
+                                item.iconName
+                              );
+                              return (
+                                <li
+                                  key={index}
+                                  className="bg-gray-800 p-4 rounded-lg shadow"
+                                >
+                                  <div className="flex flex-col sm:flex-row sm:items-center">
+                                    <div className="flex items-center mb-2 sm:mb-0">
+                                      {IconComponent && (
+                                        <IconComponent className="text-green-400 mr-2 text-xl sm:text-2xl" />
+                                      )}
+                                      <p className="text-green-400 font-semibold text-sm sm:text-base">
+                                        {item.insight}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <p className="text-gray-300 mt-2 text-xs sm:text-sm">
+                                    <span className="font-medium">
+                                      Technical:
+                                    </span>{" "}
+                                    {item.technical}
+                                  </p>
+                                  <p className="text-gray-300 mt-1 text-xs sm:text-sm">
+                                    <span className="font-medium">Reason:</span>{" "}
+                                    {item.reason}
+                                  </p>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        );
+                      } else if (unavailableData.length > 0) {
+                        return (
+                          <div className="text-yellow-300 text-sm sm:text-base">
+                            <p>Some data is unavailable or invalid:</p>
+                            <ul className="list-disc pl-5 mt-2">
+                              {unavailableData.map((item, index) => (
+                                <li key={index} className="text-xs sm:text-sm">
+                                  {item.param}: {item.reason}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <p className="text-gray-300 text-sm sm:text-base">
+                            No specific insights available for the current data.
+                          </p>
+                        );
+                      }
+                    })()}
+                  </div>
+                  <div className="overflow-x-auto bg-gray-800 rounded-lg shadow">
+                    <table className="w-full table-auto">
+                      <thead>
+                        <tr className="bg-gray-700 border-b border-gray-600">
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Time
+                          </th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Temp (°C)
+                          </th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Precip (mm/h)
+                          </th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Wind (m/s)
+                          </th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Humidity (%)
+                          </th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            Solar (W/m^2)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-gray-800 divide-y divide-gray-700">
+                        {Object.keys(data.properties.parameter.T2M).map(
+                          (time, index) => (
+                            <tr
+                              key={time}
+                              className={
+                                index % 2 === 0 ? "bg-gray-750" : "bg-gray-800"
+                              }
+                            >
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-300">
+                                {time}
+                              </td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">
+                                {data.properties.parameter.T2M[time]?.toFixed(
+                                  1
+                                )}
+                              </td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">
+                                {(
+                                  data.properties.parameter.PRECTOTCORR[time] ||
+                                  0
+                                ).toFixed(2)}
+                              </td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">
+                                {data.properties.parameter.WS2M[time]?.toFixed(
+                                  1
+                                )}
+                              </td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">
+                                {data.properties.parameter.RH2M[time]?.toFixed(
+                                  1
+                                )}
+                              </td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-100">
+                                {data.properties.parameter.ALLSKY_SFC_SW_DWN[
+                                  time
+                                ]?.toFixed(1)}
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="mt-8">
+                    <AgriChatbot
+                      latitude={latitude}
+                      longitude={longitude}
+                      nasaData={data}
+                    />
+                  </div>
+                </motion.div>
+              )}
+          </div>
+        </motion.div>
+      </div>
     );
 }
