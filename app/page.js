@@ -1,6 +1,6 @@
 // app/page.js
 
-import NasaData from "./components/NasaData"; // Ensure the correct file extension
+import NasaData from "./NasaData/page"; // Corrected import path
 
 export default function Home() {
   return (

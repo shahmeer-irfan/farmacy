@@ -19,8 +19,7 @@ import {
 } from "react-icons/fa";
 import { Inter } from "next/font/google";
 import { FaSatellite } from "react-icons/fa";
-import NASABackground from "./NASABackground";
-import AgriChatbot from "./AgriChatbot";
+import AgriChatbot from "../../components/AgriChatbot";
 import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
